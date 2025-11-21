@@ -6,7 +6,10 @@
 # ライブラリの読み込み
 ############################################################
 import os
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv  # type: ignore
+except Exception:
+    load_dotenv = None
 import streamlit as st
 import logging
 import sys
@@ -37,7 +40,17 @@ import constants as ct
 ############################################################
 # 設定関連
 ############################################################
-load_dotenv()
+# Attempt to load .env if python-dotenv is available. If it's not installed
+# we log a warning and continue so the module import doesn't raise an error.
+if load_dotenv is not None:
+    try:
+        load_dotenv()
+    except Exception as e:
+        logging = __import__("logging")
+        logging.warning(f"load_dotenv() failed in utils.py: {e}")
+else:
+    logging = __import__("logging")
+    logging.warning("python-dotenv not installed; skipping load_dotenv() in utils.py")
 
 
 ############################################################
