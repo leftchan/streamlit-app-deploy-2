@@ -48,7 +48,15 @@ except Exception as _lang_exc:
     import logging as _logging
     _logging.warning(f"langchain_community or related imports failed: {_lang_exc}")
 from typing import List
-from sudachipy import tokenizer, dictionary
+try:
+    from sudachipy import tokenizer, dictionary
+    _HAS_SUDACHIPY = True
+except Exception as _sud_exc:
+    tokenizer = None
+    dictionary = None
+    _HAS_SUDACHIPY = False
+    import logging as _logging
+    _logging.warning(f"sudachipy import failed: {_sud_exc}")
 try:
     from langchain_community.agent_toolkits import SlackToolkit
     from langchain.agents import AgentType, initialize_agent
