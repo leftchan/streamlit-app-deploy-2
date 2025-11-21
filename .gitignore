@@ -170,15 +170,3 @@ cython_debug/
 logs/
 # Ignore the cloned repository directory
 streamlit-app-deploy-2/
-
-# Ignored by cleanup
-.DS_Store
-
-# Ignored by cleanup
-data/rag/
-
-# Ignored by cleanup
-data/slack/
-
-# Ignored by cleanup
-images/
