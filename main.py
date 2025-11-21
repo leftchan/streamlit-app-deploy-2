@@ -5,7 +5,11 @@
 ############################################################
 # ライブラリの読み込み
 ############################################################
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv  # type: ignore
+except Exception:
+    load_dotenv = None
+
 import logging
 import streamlit as st
 import utils
@@ -21,7 +25,16 @@ st.set_page_config(
     page_title=ct.APP_NAME
 )
 
-load_dotenv()
+# Attempt to load .env if python-dotenv is available. If it's not installed
+# we log a warning and continue so the app doesn't crash on import.
+if load_dotenv is not None:
+    try:
+        load_dotenv()
+    except Exception as e:
+        # Use basic warning here; ct may not be initialized at import time.
+        logging.warning(f"load_dotenv() failed: {e}")
+else:
+    logging.warning("python-dotenv not installed; skipping load_dotenv()")
 
 logger = logging.getLogger(ct.LOGGER_NAME)
 
