@@ -12,7 +12,15 @@ except Exception:
 
 import logging
 import streamlit as st
-import utils
+
+# Import utils safely: if it fails during deploy due to missing packages,
+# show a user-friendly error in the app instead of crashing with a traceback.
+try:
+    import utils
+except Exception as _import_err:
+    logging.exception("Failed to import utils module")
+    st.error("アプリの初期化に失敗しました。依存関係のインストールに問題があります。管理者にログの確認を依頼してください。")
+    st.stop()
 from initialize import initialize
 import components as cn
 import constants as ct
