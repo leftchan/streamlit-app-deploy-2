@@ -168,3 +168,5 @@ cython_debug/
 .db_service/
 .chroma/
 logs/
+# Ignore the cloned repository directory
+streamlit-app-deploy-2/
