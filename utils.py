@@ -14,21 +14,58 @@ import streamlit as st
 import logging
 import sys
 import unicodedata
-from langchain_community.document_loaders import PyMuPDFLoader, Docx2txtLoader
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder, PromptTemplate
-from langchain.schema import HumanMessage, AIMessage
-from langchain_openai import OpenAIEmbeddings
-from langchain_community.vectorstores import Chroma
-from langchain.chains import create_history_aware_retriever, create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain_community.callbacks.streamlit import StreamlitCallbackHandler
+try:
+    from langchain_community.document_loaders import PyMuPDFLoader, Docx2txtLoader
+    from langchain.text_splitter import CharacterTextSplitter
+    from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder, PromptTemplate
+    from langchain.schema import HumanMessage, AIMessage
+    from langchain_openai import OpenAIEmbeddings
+    from langchain_community.vectorstores import Chroma
+    from langchain.chains import create_history_aware_retriever, create_retrieval_chain
+    from langchain.chains.combine_documents import create_stuff_documents_chain
+    from langchain_community.callbacks.streamlit import StreamlitCallbackHandler
+    _HAS_LANGCHAIN_COMMUNITY = True
+except Exception as _lang_exc:
+    # If langchain_community (or related packages) are not installed in the
+    # deployment environment, avoid raising at import time. We set placeholders
+    # for the names used later so import-time errors do not occur; runtime
+    # usage of the missing features will still fail with a clear message.
+    _HAS_LANGCHAIN_COMMUNITY = False
+    PyMuPDFLoader = None
+    Docx2txtLoader = None
+    CharacterTextSplitter = None
+    ChatPromptTemplate = None
+    MessagesPlaceholder = None
+    PromptTemplate = None
+    HumanMessage = None
+    AIMessage = None
+    OpenAIEmbeddings = None
+    Chroma = None
+    create_history_aware_retriever = None
+    create_retrieval_chain = None
+    create_stuff_documents_chain = None
+    StreamlitCallbackHandler = None
+    import logging as _logging
+    _logging.warning(f"langchain_community or related imports failed: {_lang_exc}")
 from typing import List
 from sudachipy import tokenizer, dictionary
-from langchain_community.agent_toolkits import SlackToolkit
-from langchain.agents import AgentType, initialize_agent
-from langchain_community.document_loaders.csv_loader import CSVLoader
-from langchain_community.retrievers import BM25Retriever
+try:
+    from langchain_community.agent_toolkits import SlackToolkit
+    from langchain.agents import AgentType, initialize_agent
+    from langchain_community.document_loaders.csv_loader import CSVLoader
+    from langchain_community.retrievers import BM25Retriever
+except Exception:
+    SlackToolkit = None
+    AgentType = None
+    initialize_agent = None
+    CSVLoader = None
+    BM25Retriever = None
+    if not _HAS_LANGCHAIN_COMMUNITY:
+        # already logged above; no need to log again
+        pass
+    else:
+        import logging as _logging
+        _logging.warning("Some langchain_community or langchain imports failed")
 from langchain.retrievers import EnsembleRetriever
 from docx import Document
 from langchain.output_parsers import CommaSeparatedListOutputParser
