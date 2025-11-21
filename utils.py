@@ -74,7 +74,12 @@ except Exception:
     else:
         import logging as _logging
         _logging.warning("Some langchain_community or langchain imports failed")
-from langchain.retrievers import EnsembleRetriever
+try:
+    from langchain.retrievers import EnsembleRetriever
+except Exception as _ens_exc:
+    EnsembleRetriever = None
+    import logging as _logging
+    _logging.warning(f"langchain.retrievers.EnsembleRetriever import failed: {_ens_exc}")
 from docx import Document
 from langchain.output_parsers import CommaSeparatedListOutputParser
 from langchain import LLMChain
