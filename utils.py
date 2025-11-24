@@ -30,7 +30,7 @@ from langchain.agents import AgentType, initialize_agent
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain.retrievers import EnsembleRetriever
 from langchain.output_parsers import CommaSeparatedListOutputParser
-from langchain import LLMChain
+from langchain.chains import LLMChain
 import datetime
 import constants as ct
 
