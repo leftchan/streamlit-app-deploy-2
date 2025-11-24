@@ -32,6 +32,7 @@ from langchain.retrievers import EnsembleRetriever
 from langchain.output_parsers import CommaSeparatedListOutputParser
 from langchain.chains import LLMChain
 import datetime
+# Import constants last to avoid circular import issues
 import constants as ct
 
 
@@ -39,6 +40,12 @@ import constants as ct
 # 設定関連
 ############################################################
 load_dotenv()
+
+
+############################################################
+# Note: Heavy dependencies are lazy-loaded within functions when needed
+# This includes: sudachipy, chromadb, PyMuPDF, python-docx, etc.
+############################################################
 
 
 ############################################################
