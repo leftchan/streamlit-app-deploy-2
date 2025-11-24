@@ -5,7 +5,8 @@
 ############################################################
 # ライブラリの読み込み
 ############################################################
-from langchain_community.document_loaders import PyMuPDFLoader, Docx2txtLoader, TextLoader
+# Heavy dependencies - lazy loaded when needed
+# from langchain_community.document_loaders import PyMuPDFLoader, Docx2txtLoader, TextLoader
 
 
 ############################################################
@@ -79,11 +80,18 @@ ENCODING_KIND = "cl100k_base"
 # ==========================================
 RAG_TOP_FOLDER_PATH = "./data/rag"
 
-SUPPORTED_EXTENSIONS = {
-    ".pdf": PyMuPDFLoader,
-    ".docx": Docx2txtLoader,
-    ".txt": lambda path: TextLoader(path, encoding="utf-8")
-}
+# Function to get supported extensions with lazy imports
+def get_supported_extensions():
+    """Returns document loader classes with lazy imports"""
+    from langchain_community.document_loaders import PyMuPDFLoader, Docx2txtLoader, TextLoader
+    return {
+        ".pdf": PyMuPDFLoader,
+        ".docx": Docx2txtLoader,
+        ".txt": lambda path: TextLoader(path, encoding="utf-8")
+    }
+
+# For backward compatibility - will be lazy loaded when accessed
+SUPPORTED_EXTENSIONS = None
 
 DB_ALL_PATH = "./.db_all"
 DB_COMPANY_PATH = "./.db_company"

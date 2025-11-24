@@ -144,14 +144,17 @@ def add_docs(folder_path, docs_all):
         folder_path: フォルダのパス
         docs_all: 各ファイルデータを格納するリスト
     """
+    # Get supported extensions with lazy imports
+    supported_extensions = ct.get_supported_extensions()
+    
     files = os.listdir(folder_path)
     for file in files:
         # ファイルの拡張子を取得
         file_extension = os.path.splitext(file)[1]
         # 想定していたファイル形式の場合のみ読み込む
-        if file_extension in ct.SUPPORTED_EXTENSIONS:
+        if file_extension in supported_extensions:
             # ファイルの拡張子に合ったdata loaderを使ってデータ読み込み
-            loader = ct.SUPPORTED_EXTENSIONS[file_extension](f"{folder_path}/{file}")
+            loader = supported_extensions[file_extension](f"{folder_path}/{file}")
         else:
             continue
         docs = loader.load()
