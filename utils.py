@@ -11,23 +11,24 @@ import streamlit as st
 import logging
 import sys
 import unicodedata
-from langchain_community.document_loaders import PyMuPDFLoader, Docx2txtLoader
+# Lazy imports for heavy dependencies - imported at function level when needed
+# from langchain_community.document_loaders import PyMuPDFLoader, Docx2txtLoader
+# from langchain_community.vectorstores import Chroma
+# from sudachipy import tokenizer, dictionary
+# from langchain_community.agent_toolkits import SlackToolkit
+# from langchain_community.retrievers import BM25Retriever
+# from docx import Document
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder, PromptTemplate
 from langchain.schema import HumanMessage, AIMessage
 from langchain_openai import OpenAIEmbeddings
-from langchain_community.vectorstores import Chroma
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_community.callbacks.streamlit import StreamlitCallbackHandler
 from typing import List
-from sudachipy import tokenizer, dictionary
-from langchain_community.agent_toolkits import SlackToolkit
 from langchain.agents import AgentType, initialize_agent
 from langchain_community.document_loaders.csv_loader import CSVLoader
-from langchain_community.retrievers import BM25Retriever
 from langchain.retrievers import EnsembleRetriever
-from docx import Document
 from langchain.output_parsers import CommaSeparatedListOutputParser
 from langchain import LLMChain
 import datetime
@@ -96,6 +97,9 @@ def create_rag_chain(db_name):
     )
     splitted_docs = text_splitter.split_documents(docs_all)
 
+    # Lazy import for Chroma
+    from langchain_community.vectorstores import Chroma
+    
     embeddings = OpenAIEmbeddings()
 
     # すでに対象のデータベースが作成済みの場合は読み込み、未作成の場合は新規作成する
@@ -275,6 +279,9 @@ def notice_slack(chat_message):
         問い合わせサンクスメッセージ
     """
 
+    # Lazy import for SlackToolkit
+    from langchain_community.agent_toolkits import SlackToolkit
+    
     # Slack通知用のAgent Executorを作成
     toolkit = SlackToolkit()
     tools = toolkit.get_tools()
@@ -308,6 +315,10 @@ def notice_slack(chat_message):
     for doc in docs_all:
         docs_all_page_contents.append(doc.page_content)
 
+    # Lazy imports for Chroma and BM25Retriever
+    from langchain_community.vectorstores import Chroma
+    from langchain_community.retrievers import BM25Retriever
+    
     # Retrieverの作成
     embeddings = OpenAIEmbeddings()
     db = Chroma.from_documents(docs_all, embedding=embeddings)
@@ -533,6 +544,8 @@ def preprocess_func(text):
     Returns:
         単語分割を実施後のテキスト
     """
+    # Lazy import for sudachipy
+    from sudachipy import tokenizer, dictionary
 
     tokenizer_obj = dictionary.Dictionary(dict="full").create()
     mode = tokenizer.Tokenizer.SplitMode.A
