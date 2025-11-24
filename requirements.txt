@@ -118,37 +118,3 @@ watchfiles==1.0.0
 websockets==14.1
 yarl==1.18.3
 zstandard==0.23.0
-
-"""
-# Core Streamlit dependencies
-streamlit==1.41.1
-python-dotenv==1.0.0
-
-# Data processing
-pandas==2.2.0
-numpy==1.26.4
-
-# Web requests
-requests==2.32.5
-
-# LangChain dependencies
-langchain==0.3.14
-langchain-openai==0.2.14
-langchain-community==0.3.14
-tiktoken==0.7.0
-
-# Vector database for RAG
-chromadb==0.5.23
-
-# Document loaders
-PyMuPDF==1.24.9
-docx2txt==0.8
-python-docx==1.1.2
-
-# Japanese text processing
-sudachipy==0.6.8
-sudachidict-core==20241021
-
-# Web search
-google-search-results==2.4.2
-"""
