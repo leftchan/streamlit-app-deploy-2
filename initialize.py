@@ -25,7 +25,14 @@ import constants as ct
 ############################################################
 # 設定関連
 ############################################################
+# 環境変数の読み込み(ローカルは.env、Streamlit Cloudはst.secrets)
 load_dotenv()
+
+# Streamlit Cloudのsecretsから環境変数を設定
+if hasattr(st, 'secrets'):
+    for key in st.secrets:
+        if key not in os.environ:
+            os.environ[key] = st.secrets[key]
 
 
 ############################################################

@@ -23,7 +23,15 @@ st.set_page_config(
     page_title=ct.APP_NAME
 )
 
+# 環境変数の読み込み(ローカルは.env、Streamlit Cloudはst.secrets)
+import os
 load_dotenv()
+
+# Streamlit Cloudのsecretsから環境変数を設定
+if hasattr(st, 'secrets'):
+    for key in st.secrets:
+        if key not in os.environ:
+            os.environ[key] = st.secrets[key]
 
 logger = logging.getLogger(ct.LOGGER_NAME)
 
@@ -34,8 +42,13 @@ logger = logging.getLogger(ct.LOGGER_NAME)
 try:
     initialize()
 except Exception as e:
-    logger.error(f"{ct.INITIALIZE_ERROR_MESSAGE}\n{e}")
+    import traceback
+    error_details = traceback.format_exc()
+    logger.error(f"{ct.INITIALIZE_ERROR_MESSAGE}\n{e}\n{error_details}")
     st.error(utils.build_error_message(ct.INITIALIZE_ERROR_MESSAGE), icon=ct.ERROR_ICON)
+    # デバッグ用に詳細エラーを表示
+    with st.expander("エラー詳細を表示"):
+        st.code(error_details)
     st.stop()
 
 # アプリ起動時のログ出力
